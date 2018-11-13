@@ -215,7 +215,7 @@ $("form").submit(function() {
       headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'mode': 'cors'
+          'mode': 'no-cors'
       },
       body: JSON.stringify(data)
     })
