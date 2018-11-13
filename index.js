@@ -5,7 +5,6 @@ var express = require("express");
 var app = express();
 var http = require("http").Server(app);
 var https = require("https");
-https.post = require("https-post");
 var io = require("socket.io")(http);
 var port = process.env.PORT || 3000;
 
@@ -75,8 +74,8 @@ io.on("connection", function(socket) {
 
   // When a client sends a message, it will be broadcasted to all clients
   socket.on("chat message", function(msg) {
-    msg.mood = checkMood(msg.text);
-    io.emit("chat message", msg);
+    msg.mood = checkMood(msg);
+    // io.emit("chat message", msg);
   });
 
   socket.on("private message", function(msg) {
@@ -98,11 +97,29 @@ function checkMood(text){
   var url = "https://ccchattone.eu-gb.mybluemix.net/tone";
   var data = JSON.stringify({ texts: [text] });
 
-  https.post(url, data, function(res){
-    res.on('data', function(chunk){
-      return chunk;
+  var options = {
+    hostname: url,
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'mode': 'cors'
+    }
+  };
+
+  var req = https.request(options, function(res){
+    var message = res.statusCode + "\n";
+
+    res.on('data', function (body){
+      msg.mood = body;
+      io.emit("chat message", msg);
+    });
+    res.on('error', function(e){
+      msg.mood = "Mood not detected";
+      io.emit("chat message", msg);
     });
   });
+  req.write(data);
+  req.end();
 }
 
 // This is the command to start the server
