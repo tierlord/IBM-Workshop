@@ -169,7 +169,8 @@ $("form").submit(function() {
     sender: usr,
     time: getTime(),
     text: "",
-    file: null
+    file: null,
+    mood: null
   };
 
   if (attachedFile != null) {
@@ -208,33 +209,6 @@ $("form").submit(function() {
     msg.recipient = "all";
     msg.text = msgtext;
     socket.emit("chat message", msg);
-
-    fetch("https://ccchattone.eu-gb.mybluemix.net/tone", {
-      method: "POST",
-      headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'mode': 'cors'
-      },
-      body: JSON.stringify({
-         texts: [msg.text]
-      })
-  }).then((response) => {
-    var contentType = response.headers.get("content-type");
-    if(contentType && contentType.includes("application/json")) {
-       return response.json();
-    }
-    throw new TypeError("Oops, we haven't got JSON!");
-  })
-  .then((response) => { 
-      console.log("response:" +  JSON.stringify(response));
-      if (response.mood) {
-        alert(response.mood);
-      }
-  })
-
-
-
     $("#messages").append(createMsgBubble(usr, getTime(), msgtext, msg.file));
   }
   $("#m").val("");
@@ -252,6 +226,7 @@ socket.on("chat message", function(msg) {
     );
     scrollDown();
   }
+  alert(msg.mood);
 });
 
 socket.on("private message", function(msg) {
