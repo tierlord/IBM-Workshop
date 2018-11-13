@@ -1,5 +1,5 @@
 applications:
- - name: determined-dijkstra
+ - name: sup
    memory: 256M
-   host: determined-dijkstra
+   host: sup
    buildpack: staticfile_buildpack
