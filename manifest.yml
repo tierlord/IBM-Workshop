@@ -1,5 +1,5 @@
 applications:
- - name: sup
+ - name: super
    memory: 256M
-   host: sup
+   host: super
    buildpack: staticfile_buildpack
