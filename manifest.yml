@@ -1,5 +1,5 @@
 applications:
- - name: test
+ - name: ccchatroom
    memory: 256M
-   host: test
+   host: ccchatroom
    buildpack: staticfile_buildpack
