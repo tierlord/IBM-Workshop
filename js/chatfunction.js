@@ -212,13 +212,15 @@ $("form").submit(function() {
     data = {"texts" : [].concat(msg.text).concat("")};
     fetch('https://ccchattone.eu-gb.mybluemix.net/tone', {
       method: "POST",
+      mode: 'cors',
       headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'mode': 'cors'
       },
       body: JSON.stringify(data)
-    }).then(response => {
+    })
+    .then(response => {
       alert(response);
       return response.json(); 
     }).then(data => { 
