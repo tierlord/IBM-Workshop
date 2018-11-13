@@ -6,7 +6,8 @@
   "dependencies": {
     "express": "^4.16.3",
     "nodemon": "^1.18.4",
-    "socket.io": "^1.7.4"
+    "socket.io": "^1.7.4",
+	"https-post": "^0.1.1"
   },
   "devDependencies": {
     "express": "^4.16.3",

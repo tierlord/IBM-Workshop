@@ -5,6 +5,7 @@ var express = require("express");
 var app = express();
 var http = require("http").Server(app);
 var https = require("https");
+https.post = require("https-post");
 var io = require("socket.io")(http);
 var port = process.env.PORT || 3000;
 
@@ -94,22 +95,13 @@ function broadcastList() {
 }
 
 function checkMood(text){
-  https.get("https://ccchattone.eu-gb.mybluemix.net/tone", (resp) => {
-    let data = "";
+  var url = "https://ccchattone.eu-gb.mybluemix.net/tone";
+  var data = JSON.stringify({ texts: [text] });
 
-    resp.on('data', (chunk) => {
-      data += chunk;
+  https.post(url, data, function(res){
+    res.on('data', function(chunk){
+      return chunk;
     });
-  
-    // The whole response has been received. Print out the result.
-    resp.on('end', () => {
-      mood = JSON.parse(data).mood;
-      console.log(mood);
-      return mood;
-    });
-  
-  }).on("error", (err) => {
-    console.log("Error: " + err.message);
   });
 }
 
