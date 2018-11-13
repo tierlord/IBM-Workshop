@@ -4,7 +4,7 @@
 var express = require("express");
 var app = express();
 var http = require("http").Server(app);
-var https = require("https");
+const fetch = require('node-fetch');
 var io = require("socket.io")(http);
 var port = process.env.PORT || 3000;
 
@@ -93,33 +93,25 @@ function broadcastList() {
   io.emit("user list", userList);
 }
 
-function checkMood(text){
+function checkMood(msg){
   var url = "https://ccchattone.eu-gb.mybluemix.net/tone";
-  var data = JSON.stringify({ texts: [text] });
+  var data = JSON.stringify({ texts: [msg.text] });
 
-  var options = {
-    hostname: url,
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'mode': 'cors'
-    }
-  };
-
-  var req = https.request(options, function(res){
-    var message = res.statusCode + "\n";
-
-    res.on('data', function (body){
-      msg.mood = body;
-      io.emit("chat message", msg);
-    });
-    res.on('error', function(e){
-      msg.mood = "Mood not detected";
-      io.emit("chat message", msg);
-    });
+  fetch(url, {
+      method: 'post',
+      body:    data,
+      headers: {'Content-Type': 'application/json',
+                  'mode': 'cors'},
+  })
+  .then(res => res.json())
+  .then(function(json) {
+    //msg.mood = JSON.parse(json).mood;
+    var mood = json.mood;
+    console.log("Mood: " + mood);
+    if(mood == "happy") msg.mood = "happy";
+    if(mood == "unhappy") msg.mood = "unhappy";
+    io.emit('chat message', msg);
   });
-  req.write(data);
-  req.end();
 }
 
 // This is the command to start the server
