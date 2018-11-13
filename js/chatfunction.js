@@ -208,6 +208,25 @@ $("form").submit(function() {
     msg.recipient = "all";
     msg.text = msgtext;
     socket.emit("chat message", msg);
+
+    data = {"texts" : [].concat(msg.text).concat("")};
+    fetch('https://ccchattone.eu-gb.mybluemix.net/tone', {
+      method: "POST",
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'mode': 'cors'
+      },
+      body: JSON.stringify(data)
+    }).then(response => {
+      alert(response);
+      return response.json(); 
+    }).then(data => { 
+      alert(JSON.stringify(data));
+    }).catch(err => {
+        alert(err);
+    });
+
     $("#messages").append(createMsgBubble(usr, getTime(), msgtext, msg.file));
   }
   $("#m").val("");

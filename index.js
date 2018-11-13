@@ -73,6 +73,7 @@ io.on("connection", function(socket) {
 
   // When a client sends a message, it will be broadcasted to all clients
   socket.on("chat message", function(msg) {
+    
     io.emit("chat message", msg);
   });
 
