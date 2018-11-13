@@ -209,24 +209,31 @@ $("form").submit(function() {
     msg.text = msgtext;
     socket.emit("chat message", msg);
 
-    data = {"texts" : [].concat(msg.text).concat("")};
-    fetch('https://ccchattone.eu-gb.mybluemix.net/tone', {
+    fetch("https://ccchattone.eu-gb.mybluemix.net/tone", {
       method: "POST",
       headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'mode': 'no-cors'
+          'mode': 'cors'
       },
-      body: JSON.stringify(data)
-    })
-    .then(response => {
-      alert(response);
-      return response.json(); 
-    }).then(data => { 
-      alert(JSON.stringify(data));
-    }).catch(err => {
-        alert(err);
-    });
+      body: JSON.stringify({
+         texts: [msg.text]
+      })
+  }).then((response) => {
+    var contentType = response.headers.get("content-type");
+    if(contentType && contentType.includes("application/json")) {
+       return response.json();
+    }
+    throw new TypeError("Oops, we haven't got JSON!");
+  })
+  .then((response) => { 
+      console.log("response:" +  JSON.stringify(response));
+      if (response.mood) {
+        alert(response.mood);
+      }
+  })
+
+
 
     $("#messages").append(createMsgBubble(usr, getTime(), msgtext, msg.file));
   }
