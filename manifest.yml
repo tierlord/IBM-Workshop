@@ -1,0 +1,5 @@
+applications:
+ - name: determined-dijkstra
+   memory: 256M
+   host: determined-dijkstra
+   buildpack: staticfile_buildpack
