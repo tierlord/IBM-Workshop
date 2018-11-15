@@ -52,12 +52,10 @@ io.on("connection", function(socket) {
   // A hello event will be fired on connection. Here, the browser tells NodeJS
   // which username belongs to which socket
   socket.on("hello", function(usrnm) {
-    if(checkUsername(usrnm)){
-      socket.broadcast.emit("enter chat", usrnm);
-    }
     socketList.push([socket, usrnm]);
   });
 
+  socket.broadcast.emit("enter chat", userHandler.getLastUser());
   broadcastList();
 
   // On disconnect, the user will be removed from socketList and userList
@@ -68,10 +66,10 @@ io.on("connection", function(socket) {
         userHandler.removeUser(socketList[i][1]);
         io.emit("exit chat", socketList[i][1]);
         socketList.splice(i, 1);
+        broadcastList();
         break;
       }
     }
-    broadcastList();
   });
 
   // When a client sends a message, it will be broadcasted to all clients
