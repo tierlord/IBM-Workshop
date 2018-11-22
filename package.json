@@ -6,6 +6,7 @@
   "dependencies": {
     "express": "^4.16.3",
     "https-post": "^0.1.1",
+    "ibm_db": "^2.4.1",
     "node-fetch": "^2.3.0",
     "nodemon": "^1.18.4",
     "socket.io": "^1.7.4"
